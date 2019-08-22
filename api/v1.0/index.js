@@ -13,6 +13,7 @@ const {
 const { registerUser, login } = require("../../controllers/AuthController");
 const express = require("express");
 const { check } = require("express-validator");
+const auth = require("../../middleware/auth");
 var router = express.Router();
 
 router.post(
@@ -42,6 +43,7 @@ router.post(
 router.post(
   "/bucketlist",
   [
+    auth,
     check("name", "Name is required")
       .not()
       .isEmpty()
