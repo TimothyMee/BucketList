@@ -2,6 +2,8 @@ const { validationResult } = require("express-validator");
 const BucketList = require("../models/BucketList");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 const registerUser = async (req, res) => {
   const errors = validationResult(req);
@@ -26,6 +28,20 @@ const registerUser = async (req, res) => {
     user.password = await bcrypt.hash(password, salt);
 
     await user.save();
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
+    jwt.sign(
+      payload,
+      config.get("jwtSecret"),
+      { expiresIn: 36000 },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
   } catch (error) {
     console.log(error.message);
     return res.status(500).send("Server error");
@@ -49,6 +65,22 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json([{ msg: "Invalid Email / Password" }]);
     }
+
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
+
+    jwt.sign(
+      payload,
+      config.get("jwtSecret"),
+      { expiresIn: 36000 },
+      (err, token) => {
+        if (err) throw err;
+        res.json(token);
+      }
+    );
   } catch (error) {
     console.log(error.message);
     return res.status(500).send("Server error");
