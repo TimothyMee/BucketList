@@ -50,10 +50,19 @@ router.post(
   ],
   insertBucketList
 );
-router.get("/bucketlist", getAllBucketLists);
-router.get("/bucketlist/:id", getBucketListById);
-router.put("/bucketlist/:id", updateBucketListWithId);
-router.delete("/bucketlist/:id", deleteBucketListWithId);
+router.get("/bucketlist", auth, getAllBucketLists);
+router.get("/bucketlist/:id", auth, getBucketListById);
+router.put(
+  "/bucketlist/:id",
+  [
+    auth,
+    check("name", "Name is required")
+      .not()
+      .isEmpty()
+  ],
+  updateBucketListWithId
+);
+router.delete("/bucketlist/:id", auth, deleteBucketListWithId);
 
 router.post("/bucketlist/:id/items", insertItemIntoBucketList);
 router.get("/bucketlist/:id/items", getAllItemInBucketList);
