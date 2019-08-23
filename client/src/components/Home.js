@@ -6,7 +6,10 @@ import BucketLists from "./BucketLists";
 const Home = () => {
   return (
     <Fragment>
-      <div className="container">
+      <div className="container-50">
+        <BucketLists />
+      </div>
+      <div className="container-50">
         <BucketLists />
       </div>
     </Fragment>

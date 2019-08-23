@@ -44,6 +44,16 @@ img {
   margin-bottom: 3rem;
 }
 
+.container-50 {
+  max-width: 50%;
+  margin: auto;
+  overflow: hidden;
+  padding: 0 2rem;
+  margin-top: 6rem;
+  margin-bottom: 3rem;
+  float: left;
+}
+
 /* Text Styles*/
 .x-large {
   font-size: 4rem;
