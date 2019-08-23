@@ -64,10 +64,32 @@ router.put(
 );
 router.delete("/bucketlist/:id", auth, deleteBucketListWithId);
 
-router.post("/bucketlist/:id/items", insertItemIntoBucketList);
-router.get("/bucketlist/:id/items", getAllItemInBucketList);
-router.get("/bucketlist/:id/items/:id", getItemFromBucketListById);
-router.put("/bucketlist/:id/items/:item_id", updateItemFromBucketListWithId);
-router.delete("/bucketlist/:id/items/:item_id", deleteItemFromBucketListWithId);
+router.post(
+  "/bucketlist/:id/items",
+  [
+    auth,
+    check("name", "Name is required")
+      .not()
+      .isEmpty()
+  ],
+  insertItemIntoBucketList
+);
+router.get("/bucketlist/:id/items", auth, getAllItemInBucketList);
+router.get("/bucketlist/:id/items/:item_id", auth, getItemFromBucketListById);
+router.put(
+  "/bucketlist/:id/items/:item_id",
+  [
+    auth,
+    check("name", "Name is required")
+      .not()
+      .isEmpty()
+  ],
+  updateItemFromBucketListWithId
+);
+router.delete(
+  "/bucketlist/:id/items/:item_id",
+  auth,
+  deleteItemFromBucketListWithId
+);
 
 module.exports = router;
