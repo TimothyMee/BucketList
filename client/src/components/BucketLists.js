@@ -1,9 +1,9 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { createBucketList } from "../actions/bucketList";
+import { createBucketList, getAllBucketList } from "../actions/bucketList";
 
-const BucketLists = ({ createBucketList }) => {
+const BucketLists = ({ createBucketList, bucketLists, getAllBucketList }) => {
   const [insertFormData, setInsertFormData] = useState({
     name: ""
   });
@@ -33,6 +33,10 @@ const BucketLists = ({ createBucketList }) => {
     event.preventDefault();
     createBucketList(insertFormData);
   };
+
+  useEffect(() => {
+    getAllBucketList();
+  }, []);
   return (
     <Fragment>
       <section>
@@ -59,15 +63,38 @@ const BucketLists = ({ createBucketList }) => {
         </form>
       </section>
 
-      
+      <section>
+        <table>
+          <tr>
+            <th>S/N</th>
+            <th>Name</th>
+            <th>created_at</th>
+          </tr>
+          {bucketLists.map(function(bucketList, index) {
+            return (
+              <tr>
+                <td>{index + 1}</td>
+                <td>{bucketList.name}</td>
+                <td>{bucketList.date_created}</td>
+              </tr>
+            );
+          })}
+        </table>
+      </section>
     </Fragment>
   );
 };
 
 BucketLists.propTypes = {
-  createBucketList: PropTypes.func.isRequired
+  createBucketList: PropTypes.func.isRequired,
+  getAllBucketList: PropTypes.func.isRequired,
+  bucketLists: PropTypes.object
 };
+
+const mapStateToProps = state => ({
+  bucketLists: state.bucketList
+});
 export default connect(
-  null,
-  { createBucketList }
+  mapStateToProps,
+  { createBucketList, getAllBucketList }
 )(BucketLists);
