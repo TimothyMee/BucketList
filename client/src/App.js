@@ -6,6 +6,7 @@ import store from "./Store";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Alert from "./components/layouts/Alert";
+import Home from "./components/Home";
 class App extends Component {
   render() {
     return (
@@ -19,6 +20,7 @@ class App extends Component {
                 <Route exact path="/" component={Login} />
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/login" component={Login} />
+                <Route exact path="/home" component={Home} />
                 {/* <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <PrivateRoute
                   exact

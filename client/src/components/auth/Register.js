@@ -32,7 +32,7 @@ const Register = ({ setAlert, register, userIsAuthenticated }) => {
   };
 
   if (userIsAuthenticated) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/home" />;
   }
   return (
     <Fragment>

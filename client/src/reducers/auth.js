@@ -6,7 +6,7 @@ import {
   LOGIN_FAIL,
   LOGOUT
 } from "../config/";
-  
+
 const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: null,
@@ -23,6 +23,7 @@ export default function(state = initialState, action) {
       return { ...state, isAuthenticated: true, loading: false, user: payload };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
+      console.log(payload);
       localStorage.setItem("token", payload.token);
       return { ...state, ...payload, isAuthenticated: true, loading: false };
     case REGISTER_FAIL:
