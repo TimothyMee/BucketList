@@ -35,7 +35,7 @@ const getAllBucketLists = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(401).json({ msg: "unauthorized user token" });
 
-    const bucketlist = await BucketList.find()
+    const bucketlist = await BucketList.find({ created_by: user.id })
       .sort({ date: -1 })
       .populate("user", ["name"]);
 
@@ -62,6 +62,11 @@ const getBucketListById = async (req, res) => {
 
     if (!bucketList)
       return res.status(400).json({ msg: "No bucketlist found" });
+
+    if (bucketList.created_by.toString() !== user.id)
+      return res
+        .status(401)
+        .json({ msg: "You cannot access this Bucket List!" });
 
     res.status(200).json(bucketList);
   } catch (error) {

@@ -14,7 +14,9 @@ import {
   getAllBucketListItems,
   editBucketList,
   editItemInList,
-  addBucketList
+  addBucketList,
+  deleteBucketListData,
+  deleteBucketItemData
 } from "../actions/bucketList";
 import Moment from "react-moment";
 import Switch from "react-switch";
@@ -26,7 +28,9 @@ const BucketListDetails = ({
   bucketListItems,
   editBucketList,
   editItemInList,
-  addBucketList
+  addBucketList,
+  deleteBucketListData,
+  deleteBucketItemData
 }) => {
   let mode = null;
   let edittedItemID = "";
@@ -62,8 +66,11 @@ const BucketListDetails = ({
   };
 
   const switchChange = event => {
-    let e = { target: { name: "done", value: event } };
-    handleEditBucketItemData(e);
+    console.log("event", event);
+    setEditItemData({
+      ...editItemData,
+      ["done"]: event
+    });
   };
   const handleEditBucketItemData = event => {
     setEditItemData({
@@ -90,7 +97,7 @@ const BucketListDetails = ({
     setEditItemData({
       ...editItemData,
       ["name"]: name,
-      ["status"]: status,
+      ["done"]: status,
       ["id"]: id
     });
   };
@@ -113,15 +120,16 @@ const BucketListDetails = ({
     editItemInList(
       editItemData.id,
       editItemData.name,
-      editItemData.status,
+      editItemData.done,
       bucketList.id
     );
   };
-  const deleteBucketList = id => {
-    console.log(id);
+  const deleteBucketList = e => {
+    e.preventDefault();
+    deleteBucketListData(bucketList.id);
   };
   const deleteItem = id => {
-    console.log(id);
+    deleteBucketItemData(bucketList.id, id);
   };
 
   return (
@@ -147,7 +155,7 @@ const BucketListDetails = ({
               </button>
               <button
                 className="btn btn-danger"
-                onClick={e => deleteBucketList(bucketList.id)}
+                onClick={e => deleteBucketList(e)}
               >
                 delete
               </button>
@@ -220,7 +228,7 @@ const BucketListDetails = ({
 
       {mode === EDIT_BUCKETLIST_MODE && (
         <section>
-          <h1>Edit BucketList</h1>
+          <h3>Edit BucketList</h3>
 
           <form className="form" onSubmit={e => submitEditForm(e)}>
             <div className="form-group">
@@ -253,7 +261,7 @@ const BucketListDetails = ({
 
       {mode === ADD_ITEM_MODE && (
         <section>
-          <h1>Add BucketList Items</h1>
+          <h3>Add BucketList Items</h3>
 
           <form className="form" onSubmit={e => submitAddItemForm(e)}>
             <div className="form-group">
@@ -281,7 +289,7 @@ const BucketListDetails = ({
           <hr />
 
           {bucketListItems.length === 0 ? (
-            <h1>No Items Yet</h1>
+            <h3>No Items Yet</h3>
           ) : (
             <table className="table">
               <thead>
@@ -338,7 +346,7 @@ const BucketListDetails = ({
 
       {mode === EDIT_ITEM_MODE && (
         <section>
-          <h1>Edit BucketList Item</h1>
+          <h3>Edit BucketList Item</h3>
 
           <form className="form" onSubmit={e => submitEditItemForm(e)}>
             <div className="form-group">
@@ -352,7 +360,7 @@ const BucketListDetails = ({
               <small className="form-text">Current name : {editItemName}</small>
             </div>
             <div className="form-group">
-              <label>Mark as done</label>
+              <label>done?</label> &nbsp;&nbsp;&nbsp;
               <Switch checked={editItemStatus} onChange={switchChange}></Switch>
               <small className="form-text">
                 Current Status : {editItemStatus ? "done" : "pending"}
@@ -390,7 +398,9 @@ BucketListDetails.propTypes = {
   bucketListItems: PropTypes.array,
   editBucketList: PropTypes.func.isRequired,
   editItemInList: PropTypes.func.isRequired,
-  addBucketList: PropTypes.func.isRequired
+  addBucketList: PropTypes.func.isRequired,
+  deleteBucketListData: PropTypes.func.isRequired,
+  deleteBucketItemData: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -405,6 +415,8 @@ export default connect(
     getAllBucketListItems,
     editBucketList,
     editItemInList,
-    addBucketList
+    addBucketList,
+    deleteBucketListData,
+    deleteBucketItemData
   }
 )(BucketListDetails);

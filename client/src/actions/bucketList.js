@@ -22,20 +22,22 @@ export const createBucketList = ({ name }) => async dispatch => {
     };
 
     const res = await axios.post("/api/v1.0/bucketlist", { name }, config);
+    dispatch(setAlert("BucketList successfully created", "success"));
     dispatch({
       type: CREATE_BUCKETLIST,
       payload: { data: res.data }
     });
   } catch (error) {
-    const errors = error.response.data.errors;
+    const errors = error.response.data;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      dispatch(setAlert(errors.msg, "danger"));
     }
   }
 };
 
 export const getAllBucketList = () => async dispatch => {
   try {
+    console.log("jehjhjehj");
     if (!localStorage.getItem("token")) {
       dispatch(setAlert("Authorization Error", "danger"));
     }
@@ -53,9 +55,9 @@ export const getAllBucketList = () => async dispatch => {
       payload: { data: res.data }
     });
   } catch (error) {
-    const errors = error.response.data.errors;
+    const errors = error.response.data;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      dispatch(setAlert(errors.msg, "danger"));
     }
   }
 };
@@ -79,9 +81,9 @@ export const getAllBucketListItems = id => async dispatch => {
       payload: { data: res.data }
     });
   } catch (error) {
-    const errors = error.response.data.errors;
+    const errors = error.response.data;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      dispatch(setAlert(errors.msg, "danger"));
     }
   }
 };
@@ -105,9 +107,9 @@ export const getBucketList = id => async dispatch => {
       payload: { data: res.data }
     });
   } catch (error) {
-    const errors = error.response.data.errors;
+    const errors = error.response.data;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      dispatch(setAlert(errors.msg, "danger"));
     }
   }
 };
@@ -142,14 +144,17 @@ export const editBucketList = (name, id) => async dispatch => {
     };
 
     const res = await axios.put(`/api/v1.0/bucketlist/${id}`, { name }, config);
+    dispatch(setAlert("BucketList successfully updated", "success"));
+    dispatch(getAllBucketList());
     dispatch({
       type: FETCH_BUCKETLIST,
       payload: { data: res.data }
     });
   } catch (error) {
-    const errors = error.response.data.errors;
+    console.log(error);
+    const errors = error.response.data;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      dispatch(setAlert(errors.msg, "danger"));
     }
   }
 };
@@ -172,12 +177,13 @@ export const addBucketList = (name, id) => async dispatch => {
       { name },
       config
     );
-    getBucketList(id);
+    dispatch(setAlert("Item successfully added", "success"));
+    dispatch(getAllBucketList());
+    dispatch(getBucketList(id));
   } catch (error) {
-    console.log(error.response);
-    const errors = error.response.data.errors;
+    const errors = error.response.data;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      dispatch(setAlert(errors.msg, "danger"));
     }
   }
 };
@@ -185,7 +191,7 @@ export const addBucketList = (name, id) => async dispatch => {
 export const editItemInList = (id, name, done, bucketId) => async dispatch => {
   try {
     if (!localStorage.getItem("token")) {
-      dispatch(setAlert("Authorization Error", "danger"));
+      dispatch(setAlert("Authorization Error", "success"));
     }
 
     const config = {
@@ -195,16 +201,73 @@ export const editItemInList = (id, name, done, bucketId) => async dispatch => {
       }
     };
 
-    const response = await axios.post(
+    const response = await axios.put(
       `/api/v1.0/bucketlist/${bucketId}/items/${id}`,
       { name, done },
       config
     );
-    getBucketList(bucketId);
+    dispatch(setAlert("Item successfully updated", "success"));
+    dispatch(getAllBucketList());
+    dispatch(getBucketList(bucketId));
   } catch (error) {
-    const errors = error.response.data.errors;
+    const errors = error.response.data;
+    console.log(errors);
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      dispatch(setAlert(errors.msg, "danger"));
+    }
+  }
+};
+
+export const deleteBucketListData = id => async dispatch => {
+  try {
+    if (!localStorage.getItem("token")) {
+      dispatch(setAlert("Authorization Error", "success"));
+    }
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": localStorage.getItem("token")
+      }
+    };
+
+    const response = await axios.delete(`/api/v1.0/bucketlist/${id}/`, config);
+    dispatch(setAlert("BucketList successfully deleted", "success"));
+    dispatch(getAllBucketList());
+  } catch (error) {
+    const errors = error.response.data;
+    console.log(errors);
+    if (errors) {
+      dispatch(setAlert(errors.msg, "danger"));
+    }
+  }
+};
+
+export const deleteBucketItemData = (bucketId, id) => async dispatch => {
+  try {
+    if (!localStorage.getItem("token")) {
+      dispatch(setAlert("Authorization Error", "success"));
+    }
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": localStorage.getItem("token")
+      }
+    };
+
+    const response = await axios.delete(
+      `/api/v1.0/bucketlist/${bucketId}/items/${id}`,
+      config
+    );
+    dispatch(setAlert("Item successfully deleted", "success"));
+    dispatch(getAllBucketList());
+    dispatch(getBucketList(bucketId));
+  } catch (error) {
+    const errors = error.response.data;
+    console.log(errors);
+    if (errors) {
+      dispatch(setAlert(errors.msg, "danger"));
     }
   }
 };
