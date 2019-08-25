@@ -1,9 +1,19 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { createBucketList, getAllBucketList } from "../actions/bucketList";
+import {
+  createBucketList,
+  getAllBucketList,
+  getBucketList
+} from "../actions/bucketList";
+import Moment from "react-moment";
 
-const BucketLists = ({ createBucketList, bucketLists, getAllBucketList }) => {
+const BucketLists = ({
+  createBucketList,
+  bucketLists,
+  getAllBucketList,
+  getBucketList
+}) => {
   const [insertFormData, setInsertFormData] = useState({
     name: ""
   });
@@ -34,6 +44,10 @@ const BucketLists = ({ createBucketList, bucketLists, getAllBucketList }) => {
     createBucketList(insertFormData);
   };
 
+  const viewDetails = id => {
+    getBucketList(id);
+  };
+
   useEffect(() => {
     getAllBucketList();
   }, []);
@@ -41,11 +55,11 @@ const BucketLists = ({ createBucketList, bucketLists, getAllBucketList }) => {
     <Fragment>
       <section>
         <form className="form" onSubmit={e => submitInsertForm(e)}>
-          <h3 className="large text-primary">Create new BucketList</h3>
+          <h5 className="lead text-primary">Create new BucketList</h5>
           <div className="form-group">
             <input
               type="text"
-              placeholder="New Bucket-List Name"
+              placeholder="New BucketList Name"
               name="name"
               value={insertName}
               onChange={e => handleInsertFormData(e)}
@@ -64,21 +78,35 @@ const BucketLists = ({ createBucketList, bucketLists, getAllBucketList }) => {
       </section>
 
       <section>
-        <table>
-          <tr>
-            <th>S/N</th>
-            <th>Name</th>
-            <th>created_at</th>
-          </tr>
-          {bucketLists.map(function(bucketList, index) {
-            return (
-              <tr>
-                <td>{index + 1}</td>
-                <td>{bucketList.name}</td>
-                <td>{bucketList.date_created}</td>
-              </tr>
-            );
-          })}
+        <table className="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>S/N</th>
+              <th>Name</th>
+              <th>created_at</th>
+              <th>actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bucketLists.map(function(bucketList, index) {
+              return (
+                <tr>
+                  <td>{index + 1}</td>
+                  <td>{bucketList.name}</td>
+                  <td>
+                    <Moment format="YYYY-MM-DD HH:mm">
+                      {bucketList.date_created}
+                    </Moment>
+                  </td>
+                  <td>
+                    <a href="#!" onClick={e => viewDetails(bucketList._id)}>
+                      details
+                    </a>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
       </section>
     </Fragment>
@@ -88,7 +116,8 @@ const BucketLists = ({ createBucketList, bucketLists, getAllBucketList }) => {
 BucketLists.propTypes = {
   createBucketList: PropTypes.func.isRequired,
   getAllBucketList: PropTypes.func.isRequired,
-  bucketLists: PropTypes.object
+  getBucketList: PropTypes.func.isRequired,
+  bucketLists: PropTypes.array
 };
 
 const mapStateToProps = state => ({
@@ -96,5 +125,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { createBucketList, getAllBucketList }
+  { createBucketList, getAllBucketList, getBucketList }
 )(BucketLists);
