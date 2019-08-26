@@ -172,11 +172,7 @@ export const addBucketList = (name, id) => async dispatch => {
       }
     };
 
-    const response = await axios.post(
-      `/api/v1.0/bucketlist/${id}/items`,
-      { name },
-      config
-    );
+    await axios.post(`/api/v1.0/bucketlist/${id}/items`, { name }, config);
     dispatch(setAlert("Item successfully added", "success"));
     dispatch(getAllBucketList());
     dispatch(getBucketList(id));
@@ -201,7 +197,7 @@ export const editItemInList = (id, name, done, bucketId) => async dispatch => {
       }
     };
 
-    const response = await axios.put(
+    await axios.put(
       `/api/v1.0/bucketlist/${bucketId}/items/${id}`,
       { name, done },
       config
@@ -231,7 +227,7 @@ export const deleteBucketListData = id => async dispatch => {
       }
     };
 
-    const response = await axios.delete(`/api/v1.0/bucketlist/${id}/`, config);
+    await axios.delete(`/api/v1.0/bucketlist/${id}/`, config);
     dispatch(setAlert("BucketList successfully deleted", "success"));
     dispatch(getAllBucketList());
   } catch (error) {
@@ -256,10 +252,7 @@ export const deleteBucketItemData = (bucketId, id) => async dispatch => {
       }
     };
 
-    const response = await axios.delete(
-      `/api/v1.0/bucketlist/${bucketId}/items/${id}`,
-      config
-    );
+    await axios.delete(`/api/v1.0/bucketlist/${bucketId}/items/${id}`, config);
     dispatch(setAlert("Item successfully deleted", "success"));
     dispatch(getAllBucketList());
     dispatch(getBucketList(bucketId));

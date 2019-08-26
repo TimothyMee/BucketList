@@ -6,8 +6,7 @@ import {
   EDIT_BUCKETLIST_MODE,
   ADD_ITEM_MODE,
   EDIT_ITEM_MODE,
-  EMPTY_MODE,
-  CHANGE_BUCKETLIST_MODE
+  EMPTY_MODE
 } from "../config";
 import {
   changeBucketListMode,
@@ -33,7 +32,6 @@ const BucketListDetails = ({
   deleteBucketItemData
 }) => {
   let mode = null;
-  let edittedItemID = "";
   if (bucketList) {
     mode = bucketList.mode;
   }
@@ -84,6 +82,11 @@ const BucketListDetails = ({
   const editItemName = editItemData.name;
   const editItemStatus = editItemData.done;
 
+  const changeModeTo = mode => {
+    event.preventDefault();
+    changeBucketListMode(mode);
+  };
+
   const addItemListView = async () => {
     await changeModeTo(ADD_ITEM_MODE);
     await getAllBucketListItems(bucketList.id);
@@ -100,11 +103,6 @@ const BucketListDetails = ({
       ["done"]: status,
       ["id"]: id
     });
-  };
-
-  const changeModeTo = mode => {
-    event.preventDefault();
-    changeBucketListMode(mode);
   };
 
   const submitEditForm = e => {

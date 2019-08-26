@@ -18,23 +18,11 @@ const BucketLists = ({
     name: ""
   });
 
-  const [editFormData, setEditFormData] = useState({
-    name: ""
-  });
-
   const insertName = insertFormData.name;
-  const editName = editFormData.name;
 
   const handleInsertFormData = event => {
     setInsertFormData({
       ...insertFormData,
-      [event.target.name]: event.target.value
-    });
-  };
-
-  const handleUpdateFormData = event => {
-    setInsertFormData({
-      ...editFormData,
       [event.target.name]: event.target.value
     });
   };
@@ -78,6 +66,7 @@ const BucketLists = ({
       </section>
 
       <section>
+        <hr />
         <table className="table table-bordered table-hover">
           <thead>
             <tr>

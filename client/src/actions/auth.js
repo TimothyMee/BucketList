@@ -10,6 +10,31 @@ import {
 } from "../config/index";
 import { setAlert } from "./alert";
 
+export const loadUser = () => async dispatch => {
+  try {
+    if (!localStorage.getItem("token")) {
+      setAlert("Authorization Error", "danger");
+    }
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": localStorage.getItem("token")
+      }
+    };
+    const res = await axios.get("/api/v1.0/auth", config);
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data
+    });
+  } catch (error) {
+    const errors = error.response.data.errors;
+    if (errors) {
+      error.forEach(err => dispatch(setAlert(err.msg, "danger")));
+    }
+  }
+};
+
 //register User
 export const register = ({ name, email, password }) => async dispatch => {
   const config = {
@@ -37,31 +62,6 @@ export const register = ({ name, email, password }) => async dispatch => {
     dispatch({
       type: REGISTER_FAIL
     });
-  }
-};
-
-export const loadUser = () => async dispatch => {
-  try {
-    if (!localStorage.getItem("token")) {
-      setAlert("Authorization Error", "danger");
-    }
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        "x-auth-token": localStorage.getItem("token")
-      }
-    };
-    const res = await axios.get("/api/v1.0/auth", config);
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data
-    });
-  } catch (error) {
-    const errors = error.response.data.errors;
-    if (errors) {
-      error.forEach(err => dispatch(setAlert(err.msg, "danger")));
-    }
   }
 };
 
