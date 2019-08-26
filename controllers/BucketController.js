@@ -22,7 +22,7 @@ const insertBucketList = async (req, res) => {
     res.status(200).json(bucketList);
   } catch (error) {
     if (error.kind === "ObjectId") {
-      return res.status(400).json({ msg: "user not were found" });
+      return res.status(400).json({ msg: "user not found" });
     }
     console.error(error.message);
     res.status(500).send("Server Error");
