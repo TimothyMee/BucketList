@@ -1,0 +1,8 @@
+{
+  "name": "BucketList API documentation",
+  "version": "1.0.0",
+  "description": "API BucketList manager",
+  "template": {
+    "forceLanguage": "en"
+  }
+}

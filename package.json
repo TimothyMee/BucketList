@@ -8,7 +8,8 @@
     "start": "node app",
     "server": "nodemon app",
     "client": "npm start --prefix client",
-    "all": "concurrently \"npm run server\" \"npm run client\""
+    "all": "concurrently \"npm run server\" \"npm run client\"",
+    "docs": "apidoc -e \"(node_modules|client)\" -o client/public/apidoc"
   },
   "keywords": [
     "bucketlist",

@@ -46,7 +46,6 @@ var router = express.Router();
  *      "token": "57e903941ca43a5f0805ba5a57e903941ca43a5f0805ba5a57e903941ca43a5f0805ba5a",
  *     }
  *
- * @apiUse UnauthorizedError
  *
  * @apiErrorExample {json} List error
  *    HTTP/1.1 500 Server Error
@@ -99,7 +98,6 @@ router.post(
  *    HTTP/1.1 500 Server Error
  *    HTTP/1.1 400 User already exists
  *
- * @apiUse UnauthorizedError
  *
  */
 router.post(
@@ -142,13 +140,12 @@ router.post(
  *        "_id" : "50805ba5a57e900805ba5a57e90"
  *        "name": "Example BucketList",
  *        "items": [],
- *        "date_created": "01/12/2017",
+ *        "date_created": "2019-08-22T17:32:07.172+00:00",
  *        "date_modified":""
  *        "created_by": "57e903941ca43a5f0805ba5a57e90"
  *        },
  *     }
  *
- * @apiUse UnauthorizedError
  *
  * @apiErrorExample {json} List error
  *    HTTP/1.1 500 Server Error
@@ -187,18 +184,17 @@ router.post(
  *
  * @apiSuccessExample {json} Success response:
  *     HTTPS 200 OK
- *     [{
- *      "data": {
+ *     {
+ *      "data": [{
  *        "_id" : "50805ba5a57e900805ba5a57e90"
  *        "name": "Example BucketList",
  *        "items": [],
- *        "date_created": "01/12/2017",
+ *        "date_created": "2019-08-22T17:32:07.172+00:00",
  *        "date_modified":""
  *        "created_by": "57e903941ca43a5f0805ba5a57e90"
- *        },
- *     }]
+ *        }],
+ *     }
  *
- * @apiUse UnauthorizedError
  *
  * @apiErrorExample {json} List error
  *    HTTP/1.1 500 Server Error
@@ -222,7 +218,7 @@ router.get("/bucketlist", auth, getAllBucketLists);
  * }
  *
  * const url = /api/v1.0/bucketlist/50805ba5a57e900805ba5a57e90
- * $http.post(url, config)
+ * $http.get(url, config)
  *   .success((res, status) => doSomethingHere())
  *   .error((err, status) => doSomethingHere());
  *
@@ -235,13 +231,12 @@ router.get("/bucketlist", auth, getAllBucketLists);
  *        "_id" : "50805ba5a57e900805ba5a57e90"
  *        "name": "Example BucketList",
  *        "items": [],
- *        "date_created": "01/12/2017",
+ *        "date_created": "2019-08-22T17:32:07.172+00:00",
  *        "date_modified":""
  *        "created_by": "57e903941ca43a5f0805ba5a57e90"
  *        },
  *     }
  *
- * @apiUse UnauthorizedError
  *
  * @apiErrorExample {json} List error
  *    HTTP/1.1 500 Server Error
@@ -249,6 +244,51 @@ router.get("/bucketlist", auth, getAllBucketLists);
  *    HTTP/1.1 401 unauthorized user token
  */
 router.get("/bucketlist/:id", auth, getBucketListById);
+
+/**
+ * @api {put} /api/v1.0/bucketlist/{:id} Update a BucketList
+ * @apiVersion 1.0.0
+ * @apiName Update BucketList
+ * @apiGroup bucketlist
+ * @apiPermission authenticated user
+ *
+ * @apiParam {id} id The bucketlist's id
+ *
+ * @apiExample {js} Example usage:
+ * const config = {
+ *  "x-auth-token" : "authenticated user token"
+ * }
+ *
+ * const url = /api/v1.0/bucketlist/50805ba5a57e900805ba5a57e90
+ * const data = {
+ *         name : "Example BucketList new name"
+ * }
+ *
+ * $http.put(url, data, config)
+ *   .success((res, status) => doSomethingHere())
+ *   .error((err, status) => doSomethingHere());
+ *
+ * @apiSuccess (Success 200) {Object} bucketList updated bucketList!
+ *
+ * @apiSuccessExample {json} Success response:
+ *     HTTPS 200 OK
+ *     {
+ *      "data": {
+ *        "_id" : "50805ba5a57e900805ba5a57e90"
+ *        "name": "Example BucketList new name",
+ *        "items": [],
+ *        "date_created": "2019-08-22T17:32:07.172+00:00",
+ *        "date_modified":"2019-08-23T17:32:07.172+00:00"
+ *        "created_by": "57e903941ca43a5f0805ba5a57e90"
+ *        },
+ *     }
+ *
+ *
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Server Error
+ *    HTTP/1.1 400 no bucket list found
+ *    HTTP/1.1 401 You cannot update Items into this Bucket List!
+ */
 router.put(
   "/bucketlist/:id",
   [
@@ -259,8 +299,97 @@ router.put(
   ],
   updateBucketListWithId
 );
+
+/**
+ * @api {delete} /api/v1.0/bucketlist/{:id} Delete a BucketList
+ * @apiVersion 1.0.0
+ * @apiName Delete BucketList
+ * @apiGroup bucketlist
+ * @apiPermission authenticated user
+ *
+ * @apiParam {id} id The bucketlist's id
+ *
+ * @apiExample {js} Example usage:
+ * const config = {
+ *  "x-auth-token" : "authenticated user token"
+ * }
+ *
+ * const url = /api/v1.0/bucketlist/50805ba5a57e900805ba5a57e90
+ *
+ * $http.delete(url, config)
+ *   .success((res, status) => doSomethingHere())
+ *   .error((err, status) => doSomethingHere());
+ *
+ * @apiSuccess (Success 200) {String} message deleted bucketlist
+ *
+ * @apiSuccessExample {json} Success response:
+ *     HTTPS 200 OK
+ *     {
+ *      "data": "Deleted Successfully",
+ *     }
+ *
+ *
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Server Error
+ *    HTTP/1.1 400 No bucketlist found
+ *    HTTP/1.1 401 unauthorized user token
+ *    HTTP/1.1 401 You cannot delete Items from this Bucket List!
+ */
 router.delete("/bucketlist/:id", auth, deleteBucketListWithId);
 
+/**
+ * @api {post} /api/v1.0/bucketlist/{:id}/items Create a BucketList Item
+ * @apiVersion 1.0.0
+ * @apiName Create BucketList Item
+ * @apiGroup bucketlist
+ * @apiPermission authenticated user
+ *
+ * @apiParam {id} id The bucketlist's id
+ * @apiParam {item_id} id The bucketlist item's id
+ *
+ * @apiExample {js} Example usage:
+ * const config = {
+ *  "x-auth-token" : "authenticated user token"
+ * }
+ *
+ * const url = /api/v1.0/bucketlist/50805ba5a57e900805ba5a57e90/items
+ *
+ * const data = {
+ *    name = "Example BucketList Item name"
+ * }
+ * $http.post(url, data ,config)
+ *   .success((res, status) => doSomethingHere())
+ *   .error((err, status) => doSomethingHere());
+ *
+ * @apiSuccess (Success 200) {Object} bucketlist bucketList with new item!
+ *
+ * @apiSuccessExample {json} Success response:
+ *     HTTPS 200 OK
+ *     {
+ *        "data": {
+ *                "_id" : "50805ba5a57e900805ba5a57e90"
+ *                "name": "Example BucketList new name",
+ *                "items": [
+ *                  {
+ *                    "name": "Example BucketList Item name",
+ *                    "date_created": "2019-08-22T17:32:07.172+00:00",
+ *                    "date_modified":""
+ *                    "done" : false
+ *                  }
+ *                ],
+ *              "date_created": "2019-08-22T17:32:07.172+00:00",
+ *              "date_modified":"2019-08-23T17:32:07.172+00:00"
+ *              "created_by": "57e903941ca43a5f0805ba5a57e90"
+ *          }
+ *      },
+ *
+ *
+ *
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Server Error
+ *    HTTP/1.1 400 no bucketlist found
+ *    HTTP/1.1 401 unauthorized user token!
+ */
 router.post(
   "/bucketlist/:id/items",
   [
@@ -271,8 +400,135 @@ router.post(
   ],
   insertItemIntoBucketList
 );
+
+/**
+ * @api {get} /api/v1.0/bucketlist/{:id}/items/ Get BucketList Items
+ * @apiVersion 1.0.0
+ * @apiName Get BucketList Items
+ * @apiGroup bucketlist
+ * @apiPermission authenticated user
+ *
+ * @apiParam {id} id The bucketlist's id
+ *
+ * @apiExample {js} Example usage:
+ * const config = {
+ *  "x-auth-token" : "authenticated user token"
+ * }
+ *
+ * const url = /api/v1.0/bucketlist/50805ba5a57e900805ba5a57e90/items/
+ *
+ * $http.get(url, config)
+ *   .success((res, status) => doSomethingHere())
+ *   .error((err, status) => doSomethingHere());
+ *
+ * @apiSuccess (Success 200) {Object} item bucketList item!
+ *
+ * @apiSuccessExample {json} Success response:
+ *     HTTPS 200 OK
+ *     {
+ *      "data": [{
+ *              "name": "Example BucketList Item name",
+ *              "date_created": "2019-08-22T17:32:07.172+00:00",
+ *              "date_modified":""
+ *              "done" : false
+ *            }]
+ *
+ *
+ *
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Server Error
+ *    HTTP/1.1 400 no bucketlist found
+ *    HTTP/1.1 401 unauthorized user token!
+ */
 router.get("/bucketlist/:id/items", auth, getAllItemInBucketList);
+
+/**
+ * @api {get} /api/v1.0/bucketlist/{:id}/items/{:item_id} Get a BucketList Item
+ * @apiVersion 1.0.0
+ * @apiName Get BucketList Item
+ * @apiGroup bucketlist
+ * @apiPermission authenticated user
+ *
+ * @apiParam {id} id The bucketlist's id
+ * @apiParam {item_id} id The bucketlist item's id
+ *
+ * @apiExample {js} Example usage:
+ * const config = {
+ *  "x-auth-token" : "authenticated user token"
+ * }
+ *
+ * const url = /api/v1.0/bucketlist/50805ba5a57e900805ba5a57e90/items/5a57e900805a57e900805a57e90080
+ *
+ * $http.get(url, config)
+ *   .success((res, status) => doSomethingHere())
+ *   .error((err, status) => doSomethingHere());
+ *
+ * @apiSuccess (Success 200) {Object} item bucketList item!
+ *
+ * @apiSuccessExample {json} Success response:
+ *     HTTPS 200 OK
+ *     {
+ *      "data": {
+ *              "name": "Example BucketList Item name",
+ *              "date_created": "2019-08-22T17:32:07.172+00:00",
+ *              "date_modified":""
+ *              "done" : false
+ *            }
+ *     }
+ *
+ *
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Server Error
+ *    HTTP/1.1 400 no bucketlist found
+ *    HTTP/1.1 400 no item with id 5a57e900805a57e900805a57e900801 found!
+ *    HTTP/1.1 401 unauthorized user token!
+ */
 router.get("/bucketlist/:id/items/:item_id", auth, getItemFromBucketListById);
+
+/**
+ * @api {put} /api/v1.0/bucketlist/{:id}/items/{:item_id} Update a BucketList Item
+ * @apiVersion 1.0.0
+ * @apiName Update BucketList Item
+ * @apiGroup bucketlist
+ * @apiPermission authenticated user
+ *
+ * @apiParam {id} id The bucketlist's id
+ * @apiParam {item_id} id The bucketlist item's id
+ *
+ * @apiExample {js} Example usage:
+ * const config = {
+ *  "x-auth-token" : "authenticated user token"
+ * }
+ *
+ * const url = /api/v1.0/bucketlist/50805ba5a57e900805ba5a57e90/items/5a57e900805a57e900805a57e90080
+ * const data = {
+ *         name : "Example BucketList Item new name",
+ *          done : true
+ * }
+ *
+ * $http.put(url, data, config)
+ *   .success((res, status) => doSomethingHere())
+ *   .error((err, status) => doSomethingHere());
+ *
+ * @apiSuccess (Success 200) {Object} bucketList updated bucketList!
+ *
+ * @apiSuccessExample {json} Success response:
+ *     HTTPS 200 OK
+ *     {
+ *      "data": {
+ *              "name": "Example BucketList Item new name",
+ *              "date_created": "2019-08-23T17:32:07.172+00:00",
+ *              "date_modified":"2019-08-24T17:32:07.172+00:00"
+ *              "done" : true
+ *            }
+ *     }
+ *
+ *
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Server Error
+ *    HTTP/1.1 400 no bucket list found
+ *    HTTP/1.1 401 You cannot update Items into this Bucket List!
+ */
 router.put(
   "/bucketlist/:id/items/:item_id",
   [
@@ -283,6 +539,43 @@ router.put(
   ],
   updateItemFromBucketListWithId
 );
+
+/**
+ * @api {delete} /api/v1.0/bucketlist/{:id}/items/{:item_id} Delete a BucketList Item
+ * @apiVersion 1.0.0
+ * @apiName Delete BucketList Item
+ * @apiGroup bucketlist
+ * @apiPermission authenticated user
+ *
+ * @apiParam {id} id The bucketlist's id
+ * @apiParam {item_id} id The bucketlist Item's id
+ *
+ * @apiExample {js} Example usage:
+ * const config = {
+ *  "x-auth-token" : "authenticated user token"
+ * }
+ *
+ * const url = /api/v1.0/bucketlist/50805ba5a57e900805ba5a57e90/items/5a57e900805a57e900805a57e90080
+ *
+ * $http.delete(url, config)
+ *   .success((res, status) => doSomethingHere())
+ *   .error((err, status) => doSomethingHere());
+ *
+ * @apiSuccess (Success 200) {String} message deleted bucketlist item
+ *
+ * @apiSuccessExample {json} Success response:
+ *     HTTPS 200 OK
+ *     {
+ *      "data": "Deleted Successfully",
+ *     }
+ *
+ *
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Server Error
+ *    HTTP/1.1 400 No bucketlist found
+ *    HTTP/1.1 401 unauthorized user token
+ *    HTTP/1.1 401 You cannot delete Items from this Bucket List!
+ */
 router.delete(
   "/bucketlist/:id/items/:item_id",
   auth,
