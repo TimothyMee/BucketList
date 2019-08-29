@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "app": "node app",
-    "server": "nodemon app",
+    "app": "nodemon app",
+    "server": "node app",
     "client": "npm start --prefix client",
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "docs": "apidoc -e \"(node_modules|client)\" -o client/public/apidoc"
