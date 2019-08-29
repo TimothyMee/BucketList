@@ -6,10 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "app": "nodemon app",
-    "server": "node app",
-    "client": "npm start --prefix client",
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "docs": "apidoc -e \"(node_modules|client)\" -o client/public/apidoc"
+    "docs": "apidoc -e \"(node_modules|client)\" -o client/public/apidoc",
+    "client": "cd client && npm start",
+    "server": "nodemon app",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "dev:server": "cd client && npm build && cd .. && npm start",
+    "start": "node app",
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "keywords": [
     "bucketlist",
